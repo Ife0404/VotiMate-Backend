@@ -1,60 +1,43 @@
 package com.codewiz.signupdemo.controller;
 
-
-import com.codewiz.signupdemo.dao.StudentRepository;
-import com.codewiz.signupdemo.dto.LoginRequest;
+import com.codewiz.signupdemo.dto.StudentRequest;
 import com.codewiz.signupdemo.entity.Student;
 import com.codewiz.signupdemo.service.StudentService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/student")
+@RequestMapping("/api/student")
 public class StudentController {
-
     @Autowired
-    public StudentService studentService;
+    private StudentService studentService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerStudent (@Valid @RequestBody Student student) {
-        if (!studentService.isEmailUnique(student.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is already in use.");
-        }
-
-        studentService.saveStudent(student);
-        return ResponseEntity.ok("Student has been registered successfully");
+    public ResponseEntity<Student> signup(@Valid @RequestBody StudentRequest studentRequest) {
+        Student student = studentService.saveStudent(studentRequest);
+        return ResponseEntity.ok(student);
     }
 
-    //Login endpoint
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    // Login is now handled by JwtAuthenticationFilter, so no /login endpoint here
 
-        Optional<Student> studentOpt = studentService.findByEmail(loginRequest.getEmail());
-
-
-        if (studentOpt.isPresent() && studentOpt.get().getPassword().equals(loginRequest.getPassword())) {
-            //Login successful
-            return ResponseEntity.ok("Login Successful");
-        } else {
-            //Login failed
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-        }
+    // New GET mapping: Retrieve student by matricNumber
+    @GetMapping("/{matricNumber}")
+    public ResponseEntity<Student> getStudent(@PathVariable String matricNumber) {
+        Student student = studentService.findByMatricNumber(matricNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with matric number: " + matricNumber));
+        return ResponseEntity.ok(student);
     }
 
-
-    //Delete endpoint
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<String> deleteAllStudents() {
-        studentService.deleteAllStudents();
-        return ResponseEntity.ok("All students have been deleted.");
+    // New DELETE mapping: Delete student by matricNumber
+    @DeleteMapping("/{matricNumber}")
+    public ResponseEntity<String> deleteStudent(@PathVariable String matricNumber) {
+        Student student = studentService.findByMatricNumber(matricNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with matric number: " + matricNumber));
+        studentService.deleteStudent(student);
+        return ResponseEntity.ok("Student with matric number " + matricNumber + " deleted successfully");
     }
-
-
 }
-
 
