@@ -1,45 +1,36 @@
 package com.codewiz.signupdemo.entity;
 
-
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
+@Table(name = "student")
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Student {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    private Long Id;
+    private Long id;
 
-    @Getter @Setter
-    @Column(nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Getter @Setter
-    @Column(nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
-    @Getter @Setter
-    @Column(nullable = false, unique = true)
+    @Column(name = "matric_number", unique = true)
     private String matricNumber;
 
-    @Getter @Setter
-    @Column(nullable = false)
+    @Column(name = "department")
     private String department;
 
-    @Getter @Setter
-    @Column(nullable = false)
+    @Column(name = "password")
     private String password;
 
-    public Student(String firstName, String lastName, String matricNumber, String department, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.matricNumber = matricNumber;
-        this.department = department;
-        this.password = password;
-    }
+    @OneToMany(mappedBy = "student")
+    private List<Vote> votes;
 }

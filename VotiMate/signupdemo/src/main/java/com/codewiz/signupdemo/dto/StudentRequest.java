@@ -15,12 +15,13 @@ public class StudentRequest {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    @NotBlank(message = "Password is required")
-    private String password;
-
     @NotBlank(message = "Matric number is required")
     private String matricNumber;
 
     @NotBlank(message = "Department is required")
     private String department;
+
+    @NotBlank(message = "Password is required")
+    private String password;
+
 }

@@ -9,21 +9,21 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class VoteResponse {
-
     private Long id;
-    private Long userId;
+    private String matricNumber;
     private Long candidateId;
-    private Long electionId;
-    private LocalDateTime voteDate;
     private String candidateName;
+    private Long electionId;
+    private String electionName;
+    private LocalDateTime timestamp;
 
-    public VoteResponse(Vote vote, String candidateName) {
+    public VoteResponse(Vote vote) {
         this.id = vote.getId();
-        this.userId = vote.getUserId();
-        this.candidateId = vote.getCandidateId();
-        this.electionId = vote.getElectionId();
-        this.voteDate = vote.getVoteDate();
-        this.candidateName = candidateName;
+        this.matricNumber = vote.getStudent().getMatricNumber();
+        this.candidateId = vote.getCandidate().getId();
+        this.candidateName = vote.getCandidate().getName();
+        this.electionId = vote.getElection().getId();
+        this.electionName = vote.getElection().getName();
+        this.timestamp = vote.getTimestamp();
     }
-
 }
