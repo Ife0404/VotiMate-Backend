@@ -1,16 +1,14 @@
 package com.codewiz.signupdemo.dao;
 
 import com.codewiz.signupdemo.entity.Vote;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Optional;
 
-@Repository
 public interface VoteRepository extends JpaRepository<Vote, Long> {
-    List<Vote> findByUserId(Long userId);
-    Page<Vote> findByUserId(Long userId, Pageable pageable);
-    List<Vote> findByElectionId(Long electionId);
+    Optional<Vote> findByStudentMatricNumberAndElectionId(String matricNumber, Long electionId);
+
+    @Query("SELECT COUNT(v) FROM Vote v WHERE v.candidate.id = :candidateId")
+    int countVotesByCandidateId(Long candidateId);
 }

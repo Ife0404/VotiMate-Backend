@@ -1,29 +1,36 @@
 package com.codewiz.signupdemo.entity;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Data
+@Table(name = "candidate")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Candidate {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
+    @Column(name = "name")
     private String name;
-    private String position;
-    private Date dateOfBirth;
+
+    @ManyToOne
+    @JoinColumn(name = "election_id")
+    private Election election;
+
+    @Column(name = "campaign_promises")
     private String campaignPromises;
-    private String profileImageUrl;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "position")
+    private String position;
+
+    @Column(name = "level")
+    private Integer level;
 }
+
