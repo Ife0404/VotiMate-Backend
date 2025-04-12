@@ -3,8 +3,6 @@ package com.codewiz.signupdemo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "candidate")
 @Getter
@@ -23,14 +21,11 @@ public class Candidate {
     @JoinColumn(name = "election_id")
     private Election election;
 
-    @Column(name = "campaign_promises", length = 1000)
+    @Column(name = "campaign_promises")
     private String campaignPromises;
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
 
     @Column(name = "position")
     private String position;

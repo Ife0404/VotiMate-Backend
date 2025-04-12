@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/candidates")
@@ -19,14 +18,8 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @PostMapping
-    public ResponseEntity<CandidateResponse> addCandidate(@Valid @RequestBody CandidateRequest candidateRequest) {
-        CandidateResponse response = candidateService.addCandidate(candidateRequest);
+    public ResponseEntity<CandidateResponse> createCandidate(@Valid @RequestBody CandidateRequest request) {
+        CandidateResponse response = candidateService.createCandidate(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/election/{electionId}")
-    public ResponseEntity<List<CandidateResponse>> getCandidatesByElection(@PathVariable Long electionId) {
-        List<CandidateResponse> responses = candidateService.getCandidatesByElection(electionId);
-        return ResponseEntity.ok(responses);
     }
 }

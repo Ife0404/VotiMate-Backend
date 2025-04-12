@@ -31,6 +31,9 @@ public class Student {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "face_embedding", columnDefinition = "BLOB")
+    private byte[] faceEmbedding; // Added for face recognition
+
     @OneToMany(mappedBy = "student")
     private List<Vote> votes;
 }

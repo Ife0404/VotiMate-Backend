@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CandidateRequest {
-    @NotBlank(message = "Candidate name is required")
+    @NotBlank(message = "Name is required")
     private String name;
 
     @NotNull(message = "Election ID is required")
@@ -17,9 +17,8 @@ public class CandidateRequest {
     @NotBlank(message = "Campaign promises are required")
     private String campaignPromises;
 
+    @NotBlank(message = "Image URL is required")
     private String imageUrl;
-
-    private String dateOfBirth;
 
     @NotBlank(message = "Position is required")
     private String position;

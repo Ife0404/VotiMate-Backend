@@ -6,9 +6,11 @@ import com.codewiz.signupdemo.dto.LoginResponse;
 import com.codewiz.signupdemo.dto.StudentRequest;
 import com.codewiz.signupdemo.dto.StudentResponse;
 import com.codewiz.signupdemo.entity.Student;
+import com.codewiz.signupdemo.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,10 +21,11 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    private String generateToken(Student student) {
-        logger.info("Generating token for student with matric number: {}", student.getMatricNumber());
-        return "mock-jwt-token-for-" + student.getMatricNumber(); // Replace with real JWT in production
-    }
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public StudentResponse signup(StudentRequest request) {
         logger.info("Attempting to sign up student with matric number: {}", request.getMatricNumber());
@@ -32,12 +35,16 @@ public class StudentService {
             throw new IllegalArgumentException("Matric number already exists");
         }
 
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+        logger.info("Password hashed for matric number {}: {}", request.getMatricNumber(), hashedPassword);
+
         Student student = new Student();
         student.setFirstName(request.getFirstName());
         student.setLastName(request.getLastName());
         student.setMatricNumber(request.getMatricNumber());
         student.setDepartment(request.getDepartment());
-        student.setPassword(request.getPassword()); // Hash in production
+        student.setPassword(hashedPassword);
+        student.setFaceEmbedding(request.getFaceEmbedding());
 
         Student savedStudent = studentRepository.save(student);
         logger.info("Student signed up successfully with ID: {}", savedStudent.getId());
@@ -57,14 +64,16 @@ public class StudentService {
                     return new IllegalArgumentException("Invalid matric number or password");
                 });
 
-        if (!student.getPassword().equals(request.getPassword())) {
+        logger.info("Retrieved student: {}, stored password hash: {}", student.getMatricNumber(), student.getPassword());
+        logger.info("Checking password match for {}: {}", request.getMatricNumber(), passwordEncoder.matches(request.getPassword(), student.getPassword()));
+        if (!passwordEncoder.matches(request.getPassword(), student.getPassword())) {
             logger.error("Login failed: Incorrect password for matric number {}", request.getMatricNumber());
             throw new IllegalArgumentException("Invalid matric number or password");
         }
 
         logger.info("Login successful for matric number: {}", request.getMatricNumber());
         LoginResponse response = new LoginResponse();
-        response.setToken(generateToken(student));
+        response.setToken(jwtUtil.generateToken(student.getMatricNumber()));
         return response;
     }
 }

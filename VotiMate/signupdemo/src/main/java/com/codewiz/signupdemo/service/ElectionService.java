@@ -45,7 +45,8 @@ public class ElectionService {
 
     public List<ElectionResponse> getAllElections() {
         logger.info("Fetching all elections");
-        return electionRepository.findAll().stream()
+        List<Election> elections = electionRepository.findAll();
+        return elections.stream()
                 .map(ElectionResponse::new)
                 .collect(Collectors.toList());
     }

@@ -1,6 +1,5 @@
 package com.codewiz.signupdemo.dto;
 
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StudentRequest {
-
     @NotBlank(message = "First name is required")
     private String firstName;
 
@@ -24,4 +22,5 @@ public class StudentRequest {
     @NotBlank(message = "Password is required")
     private String password;
 
+    private byte[] faceEmbedding; // Optional, for face recognition
 }

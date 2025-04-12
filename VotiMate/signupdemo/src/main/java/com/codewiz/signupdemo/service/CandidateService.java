@@ -11,11 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class CandidateService {
 
@@ -27,35 +22,35 @@ public class CandidateService {
     @Autowired
     private ElectionRepository electionRepository;
 
-    public CandidateResponse addCandidate(CandidateRequest candidateRequest) {
-        logger.info("Adding candidate: {} to election ID: {}", candidateRequest.getName(), candidateRequest.getElectionId());
+    public CandidateResponse createCandidate(CandidateRequest request) {
+        logger.info("Creating candidate: {}", request.getName());
 
-        Election election = electionRepository.findById(candidateRequest.getElectionId())
+        Election election = electionRepository.findById(request.getElectionId())
                 .orElseThrow(() -> {
-                    logger.error("Election not found with ID: {}", candidateRequest.getElectionId());
-                    return new IllegalArgumentException("Election not found with ID: " + candidateRequest.getElectionId());
+                    logger.error("Election not found with ID: {}", request.getElectionId());
+                    return new IllegalArgumentException("Election not found");
                 });
 
         Candidate candidate = new Candidate();
-        candidate.setName(candidateRequest.getName());
+        candidate.setName(request.getName());
         candidate.setElection(election);
-        candidate.setCampaignPromises(candidateRequest.getCampaignPromises());
-        candidate.setImageUrl(candidateRequest.getImageUrl());
-        candidate.setDateOfBirth(candidateRequest.getDateOfBirth() != null
-                ? LocalDate.parse(candidateRequest.getDateOfBirth(), DateTimeFormatter.ISO_LOCAL_DATE)
-                : null);
-        candidate.setPosition(candidateRequest.getPosition());
-        candidate.setLevel(candidateRequest.getLevel());
+        candidate.setCampaignPromises(request.getCampaignPromises());
+        candidate.setImageUrl(request.getImageUrl());
+        candidate.setPosition(request.getPosition());
+        candidate.setLevel(request.getLevel());
 
         Candidate savedCandidate = candidateRepository.save(candidate);
-        logger.info("Candidate added with ID: {}", savedCandidate.getId());
+        logger.info("Candidate created with ID: {}", savedCandidate.getId());
 
-        return new CandidateResponse(savedCandidate);
-    }
+        CandidateResponse response = new CandidateResponse();
+        response.setId(savedCandidate.getId());
+        response.setName(savedCandidate.getName());
+        response.setElectionId(savedCandidate.getElection().getId());
+        response.setCampaignPromises(savedCandidate.getCampaignPromises());
+        response.setImageUrl(savedCandidate.getImageUrl());
+        response.setPosition(savedCandidate.getPosition());
+        response.setLevel(savedCandidate.getLevel());
 
-    public List<CandidateResponse> getCandidatesByElection(Long electionId) {
-        logger.info("Fetching candidates for election ID: {}", electionId);
-        List<Candidate> candidates = candidateRepository.findByElectionId(electionId);
-        return candidates.stream().map(CandidateResponse::new).collect(Collectors.toList());
+        return response;
     }
 }
