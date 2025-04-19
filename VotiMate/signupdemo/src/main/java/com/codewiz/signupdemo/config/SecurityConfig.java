@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/candidates/**").permitAll()
                         .requestMatchers("/api/votes/**").permitAll()
                         .requestMatchers("/api/results/**").permitAll()
+                        .requestMatchers("/api/chatbot/**").permitAll() // Exclude chatbot endpoints
                         .anyRequest().authenticated()
                 )
                 .addFilter(new JwtLoginFilter(authenticationManager, jwtUtil))
@@ -130,12 +131,13 @@ public class SecurityConfig {
             String requestURI = request.getRequestURI();
             logger.info("Processing request: {}", requestURI);
 
-            // Skip authentication for permitted endpoints (no trailing slashes)
+            // Skip authentication for permitted endpoints
             if (requestURI.startsWith("/api/student") ||
                     requestURI.startsWith("/api/elections") ||
                     requestURI.startsWith("/api/candidates") ||
                     requestURI.startsWith("/api/votes") ||
-                    requestURI.startsWith("/api/results")) {
+                    requestURI.startsWith("/api/results") ||
+                    requestURI.startsWith("/api/chatbot")) { // Add chatbot path
                 logger.info("Authentication skipped for: {}", requestURI);
                 chain.doFilter(request, response);
                 return;
