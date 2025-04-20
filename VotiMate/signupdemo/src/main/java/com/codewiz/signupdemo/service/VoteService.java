@@ -85,3 +85,4 @@ public class VoteService {
         return new VoteResponse(savedVote);
     }
 }
+

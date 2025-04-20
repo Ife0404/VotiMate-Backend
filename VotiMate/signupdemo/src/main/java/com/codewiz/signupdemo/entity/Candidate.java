@@ -33,3 +33,4 @@ public class Candidate {
     @Column(name = "level")
     private Integer level;
 }
+

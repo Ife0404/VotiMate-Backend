@@ -22,6 +22,11 @@ public class ElectionService {
     @Autowired
     private ElectionRepository electionRepository;
 
+    public void deleteElection(Long id) {
+        electionRepository.deleteById(id); // assuming you're using Spring Data JPA
+    }
+
+
     public ElectionResponse createElection(ElectionRequest electionRequest) {
         logger.info("Creating election: {}", electionRequest.getName());
 

@@ -3,7 +3,6 @@ package com.codewiz.signupdemo.service;
 import com.codewiz.signupdemo.dao.ElectionRepository;
 import com.codewiz.signupdemo.dao.VoteRepository;
 import com.codewiz.signupdemo.dto.ElectionResultResponse;
-import com.codewiz.signupdemo.entity.Candidate;
 import com.codewiz.signupdemo.entity.Election;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

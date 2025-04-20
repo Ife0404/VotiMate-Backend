@@ -26,3 +26,4 @@ public class CandidateRequest {
     @NotNull(message = "Level is required")
     private Integer level;
 }
+

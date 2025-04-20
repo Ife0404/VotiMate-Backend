@@ -29,4 +29,12 @@ public class ElectionController {
         List<ElectionResponse> elections = electionService.getAllElections();
         return ResponseEntity.ok(elections);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteElection(@PathVariable Long id) {
+        electionService.deleteElection(id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
 }
+

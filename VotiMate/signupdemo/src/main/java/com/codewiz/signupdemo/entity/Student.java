@@ -37,3 +37,4 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Vote> votes;
 }
+

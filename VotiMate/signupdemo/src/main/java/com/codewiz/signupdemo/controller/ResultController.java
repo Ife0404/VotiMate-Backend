@@ -19,7 +19,3 @@ public class ResultController {
         return ResponseEntity.ok(result);
     }
 }
-
-
-
-
